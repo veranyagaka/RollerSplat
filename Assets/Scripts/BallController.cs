@@ -6,6 +6,7 @@ public class BallController : MonoBehaviour
 {
     public Rigidbody rb;
     public float speed = 15;
+    private AudioSource audioSource;
 
     public int minSwipeRecognition = 500;
 
@@ -22,6 +23,7 @@ public class BallController : MonoBehaviour
 
     private void Start()
     {
+	audioSource = GetComponent<AudioSource>();
         solveColor = Random.ColorHSV(.5f, 1); // Only take pretty light colors
         GetComponent<MeshRenderer>().material.color = solveColor;
     }
@@ -30,8 +32,15 @@ public class BallController : MonoBehaviour
     {
         // Set the balls speed when it should travel
         if (isTraveling) {
+		if (!audioSource.isPlaying){
+                audioSource.Play();
+		}
             rb.velocity = travelDirection * speed;
         }
+	else {
+		if (audioSource.isPlaying)
+                audioSource.Pause();
+	}
 
         // Paint the ground
         Collider[] hitColliders = Physics.OverlapSphere(transform.position - (Vector3.up/2), .05f);
